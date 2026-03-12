@@ -62,10 +62,18 @@ def app(environ, start_response):
         start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
         return [content]
 
-    if method == "GET" and path == "/static/styles.css":
-        css = (STATIC_DIR / "styles.css").read_bytes()
-        start_response("200 OK", [("Content-Type", "text/css; charset=utf-8")])
-        return [css]
+    if method == "GET" and path.startswith("/static/"):
+        file_name = path.removeprefix("/static/")
+        asset_path = (STATIC_DIR / file_name).resolve()
+        if STATIC_DIR.resolve() in asset_path.parents and asset_path.exists() and asset_path.is_file():
+            if asset_path.suffix == ".css":
+                content_type = "text/css; charset=utf-8"
+            elif asset_path.suffix == ".svg":
+                content_type = "image/svg+xml"
+            else:
+                content_type = "application/octet-stream"
+            start_response("200 OK", [("Content-Type", content_type)])
+            return [asset_path.read_bytes()]
 
     if method == "POST" and path == "/tasks":
         length = int(environ.get("CONTENT_LENGTH") or 0)

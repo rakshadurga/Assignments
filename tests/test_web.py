@@ -36,6 +36,10 @@ def test_homepage_renders_successfully():
 
     assert response["status"].startswith("200")
     assert b"Task Manager" in response["body"]
+    assert b"/static/logo.svg" in response["body"]
+
+    logo_response = request("GET", "/static/logo.svg")
+    assert logo_response["status"].startswith("200")
 
 
 def test_create_update_delete_task_via_http_endpoints():

@@ -22,6 +22,7 @@ Open: <http://localhost:5000>
 
 - Data is stored in-memory using a shared `TaskManager` instance.
 - Tasks reset whenever the app process restarts.
+- The header displays the Seyo logo from `static/logo.svg`.
 
 ## Test
 
